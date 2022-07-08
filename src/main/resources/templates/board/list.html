@@ -58,14 +58,14 @@
               <tr>
                 <th scope="col">번호</th>
                 <th scope="col">제목</th>
-                <th scope="col">내용</th>
+                <th scope="col">작성자</th>
               </tr>
             </thead>
             <tbody>
               <tr th:each="board: ${boards}">
                 <th th:text="${board.id}">1</th>
                 <td><a th:text="${board.title}" href="#" th:href="@{/board/form(id=${board.id})}">Mark</a></td>
-                <td th:text="${board.content}">홍길동</td>
+                <td th:text="${board.user.username}">홍길동</td>
               </tr>
             </tbody>
           </table>

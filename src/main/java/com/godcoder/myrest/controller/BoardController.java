@@ -2,12 +2,14 @@ package com.godcoder.myrest.controller;
 
 import com.godcoder.myrest.model.Board;
 import com.godcoder.myrest.repository.BoardRepository;
+import com.godcoder.myrest.service.BoardService;
 import com.godcoder.myrest.validator.BoardValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,11 +29,14 @@ public class BoardController {
     @Autowired
     private BoardValidator boardValidator;
 
+    @Autowired
+    private BoardService boardService;
+
     @GetMapping("/list")
     public String list(Model model, @PageableDefault(size = 4) Pageable pageable,
                                     @RequestParam(required = false, defaultValue = "") String searchText) {
         //Page<Board> boards = boardRepository.findAll(pageable);
-        Page<Board> boards = boardRepository.findByTitleContainingOrContentContaining(searchText, searchText, pageable);
+        Page<Board> boards = boardRepository.findByTitleContainingOrContentContainingOrderByIdDesc(searchText, searchText, pageable);
         int startPage = Math.max(1, boards.getPageable().getPageNumber() - 4);
         int endPage = Math.min(boards.getTotalPages(), boards.getPageable().getPageNumber() + 4);
 
@@ -54,12 +59,14 @@ public class BoardController {
     }
 
     @PostMapping("/form")
-    public String form(@Valid Board board, BindingResult bindingResult){ //BindingResult model Class에서 지정한 어노테이션 조건을 확인
+    public String form(@Valid Board board, BindingResult bindingResult, Authentication authentication){ //BindingResult model Class에서 지정한 어노테이션 조건을 확인
         boardValidator.validate(board, bindingResult);
         if (bindingResult.hasErrors()){
             return "board/form";
         }
-        boardRepository.save(board);
+        String username = authentication.getName();
+        boardService.save(username, board);
+       // boardRepository.save(board);
         return "redirect:/board/list";
     }
 

@@ -14,5 +14,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {//테이블
     List<Board> findByTitle(String title);
     List<Board> findByTitleOrContent(String title, String content);
 
-    Page<Board> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
+    Page<Board> findByTitleContainingOrContentContainingOrderByIdDesc(String title, String content, Pageable pageable);
 }
