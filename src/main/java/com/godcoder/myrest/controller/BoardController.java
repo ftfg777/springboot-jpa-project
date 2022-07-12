@@ -59,7 +59,7 @@ public class BoardController {
     }
 
     @PostMapping("/form")
-    public String form(@Valid Board board, BindingResult bindingResult, Authentication authentication){ //BindingResult model Class에서 지정한 어노테이션 조건을 확인
+    public String postForm(@Valid Board board, BindingResult bindingResult, Authentication authentication){ //BindingResult model Class에서 지정한 어노테이션 조건을 확인
         boardValidator.validate(board, bindingResult);
         if (bindingResult.hasErrors()){
             return "board/form";

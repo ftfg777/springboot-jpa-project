@@ -26,7 +26,9 @@ public class User {
     private List<Role> roles = new ArrayList<>();
 
 
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true) //cascade 데이터를 삭제하면 하위 데이터도 모두 삭제 / orphanRemoval 부모가 없는 데이터는 지운다
     @OneToMany(mappedBy = "user")
+
     private List<Board> boards = new ArrayList<>();
 
 

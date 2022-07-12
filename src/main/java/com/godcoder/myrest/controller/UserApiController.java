@@ -1,6 +1,7 @@
 package com.godcoder.myrest.controller;
 
 
+import com.godcoder.myrest.model.Board;
 import com.godcoder.myrest.model.User;
 import com.godcoder.myrest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,12 @@ class UserApiController {
                     .map(user -> {
 //                        user.setTitle(newUser.getTitle());
 //                        user.setContent(newUser.getContent());
-
+//                        user.setBoards(newUser.getBoards());
+                        user.getBoards().clear();
+                        user.getBoards().addAll(newUser.getBoards());
+                        for(Board board : user.getBoards()){
+                            board.setUser(user);
+                        }
                         return repository.save(user);
                     })
                     .orElseGet(() -> {
