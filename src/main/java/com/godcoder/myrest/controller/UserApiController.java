@@ -1,13 +1,18 @@
 package com.godcoder.myrest.controller;
 
 import com.godcoder.myrest.model.Board;
+import com.godcoder.myrest.model.QUser;
 import com.godcoder.myrest.model.User;
 import com.godcoder.myrest.repository.UserRepository;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.godcoder.myrest.model.QUser.user;
 
 @RestController
 @RequestMapping("/api")
@@ -20,12 +25,33 @@ class UserApiController {
         // Aggregate root
         // tag::get-aggregate-root[]
         @GetMapping("/users")
-        List<User> all() {
-            List<User> users =  repository.findAll();
-            log.debug("getBoards().size() 호출 전");
-            log.debug("getBoards().size() : {}", users.get(0).getBoards().size());
-            log.debug("getBoards().size() 호출 후");
+        Iterable<User> all(@RequestParam(required = false) String method, @RequestParam(required = false) String text) {
+            Iterable<User> users =  null;
+            Predicate predicate = null;
+
+            switch (method){
+                case "query" : users = repository.findByUsernameQuery(text);
+                    break;
+
+                case "nativeQuery" : users = repository.findByUsernameNativeQuery(text);
+                    break;
+
+                case "querydsl" :
+                    BooleanExpression booleanExpression = user.username.contains(text);
+                    if (true) {
+                        booleanExpression = booleanExpression.and(user.username.eq("jc"));
+                        users = repository.findAll(booleanExpression);
+                        break;
+                    }
+                    predicate = user.username.contains(text);
+                    users = repository.findAll(predicate);
+                    break;
+
+                default: users = repository.findAll();
+                    break;
+            }
             return users;
+
         }
         // end::get-aggregate-root[]
 

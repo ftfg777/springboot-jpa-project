@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +31,14 @@ public class User {
 
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true) //cascade 데이터를 삭제하면 하위 데이터도 모두 삭제 / orphanRemoval 부모가 없는 데이터는 지운다
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY) // user 를 조회할때 board 의 데이터도 함께 가져온다
+    @JsonIgnore
     private List<Board> boards = new ArrayList<>();
+
     /*EAGER 함께 가져올 데이터가 하나의 데이터가 증명됨으로 성능상으로 괜찮음
     OneToOne, ManyToOne
+
     LAZY 사용하지도 않을 데이터가 다 오기 때문에 과부하가 올 수 있음
     OneToMany, ManyToMany*/
-
 
 
     /* GET SET method */

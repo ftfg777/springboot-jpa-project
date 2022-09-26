@@ -52,7 +52,10 @@ public class BoardController {
             model.addAttribute("board", new Board());
         }else {
             Optional<Board> board = boardRepository.findById(id);
-            model.addAttribute("board", board);
+            if (board.isPresent()){
+                Board boardPS = board.get();
+                model.addAttribute("board", boardPS);
+            }
         }
 
         return "board/form";
