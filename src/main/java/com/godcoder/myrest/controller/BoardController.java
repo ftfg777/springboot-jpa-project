@@ -57,7 +57,6 @@ public class BoardController {
                 model.addAttribute("board", boardPS);
             }
         }
-
         return "board/form";
     }
 

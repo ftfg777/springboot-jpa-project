@@ -26,34 +26,45 @@ class UserApiController {
         // tag::get-aggregate-root[]
         @GetMapping("/users")
         Iterable<User> all(@RequestParam(required = false) String method, @RequestParam(required = false) String text) {
-            Iterable<User> users =  null;
+            Iterable<User> users =  null; // Iterable = list 부모
             Predicate predicate = null;
 
             switch (method){
-                case "query" : users = repository.findByUsernameQuery(text);
+                case "query" :
+                    users = repository.findByUsernameQuery(text);
                     break;
 
-                case "nativeQuery" : users = repository.findByUsernameNativeQuery(text);
+                case "nativeQuery" :
+                    users = repository.findByUsernameNativeQuery(text);
                     break;
 
                 case "querydsl" :
-                    BooleanExpression booleanExpression = user.username.contains(text);
-                    if (true) {
-                        booleanExpression = booleanExpression.and(user.username.eq("jc"));
-                        users = repository.findAll(booleanExpression);
-                        break;
-                    }
                     predicate = user.username.contains(text);
                     users = repository.findAll(predicate);
                     break;
 
-                default: users = repository.findAll();
+                case "querydslCustom" :
+                    users = repository.findByUsernameCustom(text);
+                    break;
+
+                case "querydslJdbc" :
+                    users = repository.findByUsernameJdbc(text);
+                    break;
+
+                default:
+                    users = repository.findAll();
                     break;
             }
             return users;
 
         }
         // end::get-aggregate-root[]
+//        BooleanExpression booleanExpression = user.username.contains(text);
+//                    if (true) {
+//                        booleanExpression = booleanExpression.and(user.username.eq("jc"));
+//                        users = repository.findAll(booleanExpression);
+//                        break;
+//                    }
 
         @PostMapping("/users")
         User newUser(@RequestBody User newUser) {

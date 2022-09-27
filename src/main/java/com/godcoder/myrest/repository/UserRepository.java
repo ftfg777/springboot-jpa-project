@@ -9,11 +9,10 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.List;
 
-public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredicateExecutor<User> {
+public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredicateExecutor<User>, CustomizedUserRepository {
 
     @EntityGraph(attributePaths = {"boards"}) //조인을 해서 데이터를 가져옴 fetch 무시
     List<User> findAll();
-
 
     User findByUsername(String username);
 
