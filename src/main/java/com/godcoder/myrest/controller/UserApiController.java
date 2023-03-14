@@ -1,5 +1,6 @@
 package com.godcoder.myrest.controller;
 
+import com.godcoder.myrest.mapper.UserMapper;
 import com.godcoder.myrest.model.Board;
 import com.godcoder.myrest.model.QUser;
 import com.godcoder.myrest.model.User;
@@ -21,6 +22,9 @@ class UserApiController {
 
         @Autowired
         private UserRepository repository;
+
+        @Autowired
+        private UserMapper userMapper;
 
         // Aggregate root
         // tag::get-aggregate-root[]
@@ -49,6 +53,10 @@ class UserApiController {
 
                 case "querydslJdbc" :
                     users = repository.findByUsernameJdbc(text);
+                    break;
+
+                case "mybatis" :
+                    users = userMapper.getUsers(text);
                     break;
 
                 default:
